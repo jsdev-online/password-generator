@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Generator Online</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <section id="app" class="ui container padded">
+      <header class="ui center pt-3 mb-2">
+        <h1 class="ui header">
+          <i class="icon ui key"></i> Simple Password Generator Online
+        </h1>
+      </header>
+      <main>
+        <div class="ui form">
+          <div class="inline field">
+            <label for="length">Password length</label>
+            <input
+              id="length"
+              type="number"
+              v-model="length"
+              min="6"
+              max="128"
+            />
+          </div>
+          <div
+            v-for="(option, index) in options"
+            :key="index"
+            class="inline field"
+          >
+            <div class="ui toggle checkbox">
+              <input
+                v-model="option.checked"
+                type="checkbox"
+                :tabindex="index"
+                class="hidden"
+                :id="`option-${index}`"
+              />
+              <label :for="`option-${index}`">{{ option.label }}</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui action input">
+              <input type="text" v-model="password" readonly ref="password" />
+              <button
+                @click="generate"
+                class="ui icon button"
+                data-tooltip="Regenerate"
+              >
+                <i class="refresh icon"></i>
+              </button>
+              <button
+                @click="download"
+                class="ui icon button"
+                data-tooltip="Download as text file"
+              >
+                <i class="download icon"></i>
+              </button>
+              <button
+                v-if="navigator.share"
+                class="ui icon button"
+                data-tooltip="Share with others"
+              >
+                <i class="share icon"></i>
+              </button>
+              <button
+                @click="qr"
+                class="ui icon button"
+                data-tooltip="Generate QR code"
+              >
+                <i class="qrcode icon"></i>
+              </button>
+              <button
+                class="ui icon button"
+                :data-tooltip="message || 'Copy to clipboard'"
+                @click="copy"
+              >
+                <i class="copy icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        MIT License 2021 |
+        <a href="https://jsdev.online" target="_blank">jsdev.online</a>
+      </footer>
+      <div
+        @click="qrModal = false"
+        class="ui dimmer"
+        :class="{'active': qrModal}"
+      ></div>
+      <div class="ui modal qr-modal" :class="{'active visible': qrModal}">
+        <div class="header flex">
+          <span>QR Code</span>
+          <button @click="qrModal = false" class="ui icon button">
+            <i class="close icon"></i>
+          </button>
+        </div>
+        <div class="content">
+          <div ref="qrcode"></div>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
